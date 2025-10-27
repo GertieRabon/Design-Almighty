@@ -1,15 +1,77 @@
-<!DOCTYPE html>
-<html>
-<head>
-</head>
-<body>
+<div class="jewelry-homepage">
+  <!-- Hero Section -->
+  <section class="hero-section">
+    <div class="hero-logo-container">
+      <img src="assets/1.png" alt="Design Almighty Logo" class="hero-logo" />
+      <div class="hero-catchphrase">Handcrafted for the almighty.</div>
+    </div>
+  </section>
 
-<h1>Create Multiple Columns</h1>
+  <!-- Featured Categories -->
+  <section class="categories-section">
+    <h2 class="section-title">Our Collections</h2>
+    <div class="categories-grid">
+      <div class="category-card" *ngFor="let category of featuredCategories" routerLink="/product">
+        <div class="category-image" [style.background-image]="'url(' + category.image + ')'"></div>
+        <div class="category-content">
+          <h3>{{category.name}}</h3>
+          <p>{{category.description}}</p>
+        </div>
+      </div>
+    </div>
+  </section>
 
-<div class="newspaper">
-Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. 
-<img routerLink="" src="../assets/GMART.png" />Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum.
+  <!-- Featured Products Carousel -->
+  <section class="featured-products">
+    <h2 class="section-title">Featured Pieces</h2>
+    <div class="carousel-container">
+      <div class="carousel-wrapper">
+        <div class="carousel-slides" [style.transform]="'translateX(' + currentSlide * -100 + '%)'">
+          <div class="carousel-slide" *ngFor="let image of carouselImages; let i = index">
+            <div class="slide-image" [style.background-image]="'url(' + image + ')'"></div>
+          </div>
+        </div>
+        <button class="carousel-btn prev-btn" (click)="previousSlide()" [disabled]="currentSlide === 0">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="15,18 9,12 15,6"></polyline>
+          </svg>
+        </button>
+        <button class="carousel-btn next-btn" (click)="nextSlide()" [disabled]="currentSlide === carouselImages.length - 1">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="9,18 15,12 9,6"></polyline>
+          </svg>
+        </button>
+      </div>
+      <div class="carousel-indicators">
+        <button 
+          *ngFor="let image of carouselImages; let i = index" 
+          class="indicator" 
+          [class.active]="i === currentSlide"
+          (click)="goToSlide(i)">
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- About Section -->
+  <section class="about-section">
+    <div class="about-content">
+      <h2>Master Craftsmanship</h2>
+      <p>For over three decades, Design Almighty has been creating exceptional jewelry pieces that celebrate life's most precious moments. Our master artisans combine traditional techniques with contemporary design to create pieces that are both timeless and modern.</p>
+      <div class="about-stats">
+        <div class="stat">
+          <span class="stat-number">30+</span>
+          <span class="stat-label">Years Experience</span>
+        </div>
+        <div class="stat">
+          <span class="stat-number">10,000+</span>
+          <span class="stat-label">Happy Customers</span>
+        </div>
+        <div class="stat">
+          <span class="stat-number">100%</span>
+          <span class="stat-label">Handcrafted</span>
+        </div>
+      </div>
+    </div>
+  </section>
 </div>
-
-</body>
-</html>

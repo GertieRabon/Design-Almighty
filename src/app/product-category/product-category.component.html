@@ -1,32 +1,109 @@
-<div class="container-fluid hero-contact p-0 m-0">
-  <h2>eCommerce</h2>
-      <div *ngFor="let category of this.productsCategory" class="col-md-4 newspaper">
-          <div>{{category.categoryName}}</div>
-            <div  class="box" *ngFor="let prod of category.products" >
-            <img class="productimg" src="../assets/products/{{prod.imageFile}}.jpg"/>
-            <p class="productname">{{prod.name}}</p>
-            <p class="productcategory">{{prod.description}}</p> 
-            <p class="productcategory">{{prod.categoryName}}</p> 
-            <p class="productcategory">{{prod.unitOfMeasure}}</p> 
-            <p class="productcategory">{{prod.price}}</p>        
-            <img  routerLink="/cart" class="cart" src="../assets/icons/shoppingcart.svg" />
+<div class="products-page">
+  <!-- Page Header -->
+  <div class="page-header">
+    <div class="container">
+      <h1 class="page-title">Our Products</h1>
+      <p class="page-subtitle">Discover our exquisite collection of handcrafted jewelry</p>
+    </div>
+  </div>
+
+  <!-- Filters and Search -->
+  <div class="filters-section">
+    <div class="container">
+      <div class="filters-row">
+        <div class="search-box">
+          <input type="text" placeholder="Search products..." class="search-input">
+          <button class="search-btn">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="8"></circle>
+              <path d="m21 21-4.35-4.35"></path>
+            </svg>
+          </button>
+        </div>
+        <div class="filter-controls">
+          <select class="filter-select">
+            <option value="">All Categories</option>
+            <option value="watches">Watches</option>
+            <option value="earrings">Earrings</option>
+            <option value="necklaces">Necklaces</option>
+            <option value="bracelets">Bracelets</option>
+            <option value="hairpins">Hairpins</option>
+            <option value="keychains">Keychains</option>
+          </select>
+          <select class="filter-select">
+            <option value="">Sort by</option>
+            <option value="price-low">Price: Low to High</option>
+            <option value="price-high">Price: High to Low</option>
+            <option value="name">Name A-Z</option>
+            <option value="newest">Newest First</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Products Grid -->
+  <div class="products-section">
+    <div class="container">
+      <div class="products-grid">
+        <div *ngFor="let category of this.productsCategory" class="category-section">
+          <h2 class="category-title">{{category.categoryName}}</h2>
+          <div class="products-row">
+            <div *ngFor="let product of category.products" class="product-card">
+              <div class="product-image">
+                <img [src]="'assets/products/' + product.imageFile + '.jpg'" [alt]="product.name" class="product-img">
+                <div class="product-overlay">
+                  <button class="quick-view-btn">Quick View</button>
+                  <button class="add-to-cart-btn" routerLink="/cart">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <circle cx="9" cy="21" r="1"></circle>
+                      <circle cx="20" cy="21" r="1"></circle>
+                      <path d="m1 1 4 4 13 13 4-4-13-13z"></path>
+                    </svg>
+                    Add to Cart
+                  </button>
+                </div>
+              </div>
+              <div class="product-info">
+                <h3 class="product-name">{{product.name}}</h3>
+                <p class="product-description">{{product.description}}</p>
+                <div class="product-details">
+                  <span class="product-category">{{product.categoryName}}</span>
+                  <span class="product-unit">{{product.unitOfMeasure}}</span>
+                </div>
+                <div class="product-price">${{product.price}}</div>
+              </div>
             </div>
+          </div>
+        </div>
       </div>
-<!--    <table class="table">
-      <div *ngFor="let category of this.productsCategory" class="col-md-4">
-        <tr >
-          <h2>{{category.categoryName}}</h2>
-        </tr >
-        <tr >
-            <td *ngFor="let prod of category.products" class="col-md-4">
-            <img class="productimg" src="../assets/products/{{prod.imageFile}}.jpg"/>
-            <p class="productname">{{prod.name}}</p>
-            <p class="productcategory">{{prod.description}}</p> 
-            <p class="productcategory">{{prod.categoryName}}</p> 
-            <p class="productcategory">{{prod.unitOfMeasure}}</p> 
-            <p class="productcategory">{{prod.price}}</p>        
-            <img  routerLink="/cart" class="cart" src="../assets/icons/shoppingcart.svg" />
-          </td>
-        </tr>
+    </div>
+  </div>
+
+  <!-- Pagination -->
+  <div class="pagination-section">
+    <div class="container">
+      <div class="pagination">
+        <button class="page-btn prev-btn" disabled>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="15,18 9,12 15,6"></polyline>
+          </svg>
+          Previous
+        </button>
+        <div class="page-numbers">
+          <button class="page-number active">1</button>
+          <button class="page-number">2</button>
+          <button class="page-number">3</button>
+          <span class="page-dots">...</span>
+          <button class="page-number">10</button>
+        </div>
+        <button class="page-btn next-btn">
+          Next
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="9,18 15,12 9,6"></polyline>
+          </svg>
+        </button>
       </div>
-    </table>-->
+    </div>
+  </div>
+</div>
