@@ -9,7 +9,6 @@ interface JewelryCategory {
   name: string;
   description: string;
   image: string;
-  count: number;
 }
 
 interface JewelryProduct {
@@ -30,6 +29,8 @@ export class MainBodyComponent implements OnInit {
   public productsCategory: ProductCategory[] = [];
   public featuredCategories: JewelryCategory[] = [];
   public featuredProducts: JewelryProduct[] = [];
+  public carouselImages: string[] = [];
+  public currentSlide: number = 0;
 
   constructor(private productService: ProductService) {
     this.initializeJewelryData();
@@ -46,32 +47,46 @@ export class MainBodyComponent implements OnInit {
     // Featured Categories
     this.featuredCategories = [
       {
-        name: "Rings",
-        description: "Exquisite engagement and wedding rings",
-        image: "assets/jewelry/rings-category.jpg",
-        count: 45
-      },
-      {
-        name: "Necklaces",
-        description: "Elegant pendants and statement pieces",
-        image: "assets/jewelry/necklaces-category.jpg",
-        count: 32
+        name: "Watches",
+        description: "Elegant timepieces for every occasion",
+        image: "assets/jewelry/watches-category.jpg"
       },
       {
         name: "Earrings",
         description: "Sophisticated studs and drops",
-        image: "assets/jewelry/earrings-category.jpg",
-        count: 28
+        image: "assets/jewelry/earrings-category.jpg"
+      },
+      {
+        name: "Necklaces",
+        description: "Elegant pendants and statement pieces",
+        image: "assets/jewelry/necklaces-category.jpg"
       },
       {
         name: "Bracelets",
         description: "Delicate chains and bangles",
-        image: "assets/jewelry/bracelets-category.jpg",
-        count: 21
+        image: "assets/jewelry/bracelets-category.jpg"
+      },
+      {
+        name: "Hairpins",
+        description: "Beautiful hair accessories and clips",
+        image: "assets/jewelry/hairpins-category.jpg"
+      },
+      {
+        name: "Keychains",
+        description: "Charming and functional key accessories",
+        image: "assets/jewelry/keychains-category.jpg"
       }
     ];
 
-    // Featured Products
+    // Carousel Images (placeholder images)
+    this.carouselImages = [
+      "https://via.placeholder.com/600x400/E7B1C1/FFFFFF?text=Jewelry+1",
+      "https://via.placeholder.com/600x400/D4AF37/FFFFFF?text=Jewelry+2",
+      "https://via.placeholder.com/600x400/F8F6F0/333333?text=Jewelry+3",
+      "https://via.placeholder.com/600x400/8B4513/FFFFFF?text=Jewelry+4"
+    ];
+
+    // Featured Products (keeping for potential future use)
     this.featuredProducts = [
       {
         name: "Diamond Solitaire Ring",
@@ -99,4 +114,21 @@ export class MainBodyComponent implements OnInit {
       }
     ];
   }
-}
+
+  // Carousel Methods
+  nextSlide(): void {
+    if (this.currentSlide < this.carouselImages.length - 1) {
+      this.currentSlide++;
+    }
+  }
+
+  previousSlide(): void {
+    if (this.currentSlide > 0) {
+      this.currentSlide--;
+    }
+  }
+
+  goToSlide(index: number): void {
+    this.currentSlide = index;
+  }
+  }
