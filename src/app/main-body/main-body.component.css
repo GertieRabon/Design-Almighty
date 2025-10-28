@@ -55,7 +55,7 @@
   text-align: center;
   opacity: 0;
   transition: opacity 0.5s ease;
-  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
+  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);
   letter-spacing: 2px;
   z-index: 1;
   max-width: 80%;
@@ -97,10 +97,11 @@
 
 /* Section Titles */
 .section-title {
-  font-size: 2.5rem;
+  font-family: 'Hello Valentica';
+  font-size: 4rem;
   text-align: center;
   margin-bottom: 3rem;
-  color: #1a1a1a;
+  color: #F54294;
   position: relative;
 }
 
@@ -112,13 +113,13 @@
   transform: translateX(-50%);
   width: 60px;
   height: 3px;
-  background: linear-gradient(45deg, #d4af37, #ffd700);
+  background: linear-gradient(45deg, #F54294, #ffd700);
 }
 
 /* Categories Section */
 .categories-section {
   padding: 80px 20px;
-  background: #fff;
+  background: #dfd7e4;
 }
 
 .categories-grid {
@@ -179,8 +180,8 @@
 
 /* Featured Products Carousel */
 .featured-products {
-  padding: 0;
-  background: #f8f6f0;
+  padding: 10px 0px 0px 0px;
+  background: #dfd7e4;
   margin: 0;
   width: 100vw;
   position: relative;
@@ -288,7 +289,7 @@
 }
 
 .indicator.active {
-  background: #d4af37;
+  background: #F54294;
   transform: scale(1.2);
 }
 
@@ -343,15 +344,16 @@
 /* About Section */
 .about-section {
   padding: 80px 20px;
-  background: #1a1a1a;
-  color: #fff;
+  background: #dfd7e4;;
+  color: #000000;
   text-align: center;
 }
 
 .about-content h2 {
-  font-size: 2.5rem;
+  font-size: 4rem;
   margin-bottom: 2rem;
-  color: #d4af37;
+  color: #F54294;
+  font-family: 'Hello Valentica';
 }
 
 .about-content p {
@@ -359,7 +361,7 @@
   max-width: 800px;
   margin: 0 auto 3rem;
   line-height: 1.8;
-  color: #ccc;
+  color: #000000;
 }
 
 .about-stats {
@@ -377,13 +379,13 @@
   display: block;
   font-size: 3rem;
   font-weight: 700;
-  color: #d4af37;
+  color: #F54294;
   margin-bottom: 10px;
 }
 
 .stat-label {
   font-size: 1rem;
-  color: #ccc;
+  color: #000000;
   text-transform: uppercase;
   letter-spacing: 1px;
 }

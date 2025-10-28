@@ -49,41 +49,41 @@ export class MainBodyComponent implements OnInit {
       {
         name: "Watches",
         description: "Elegant timepieces for every occasion",
-        image: "assets/jewelry/watches-category.jpg"
+        image: "assets/homepage/watches_category.jpg"
       },
       {
         name: "Earrings",
         description: "Sophisticated studs and drops",
-        image: "assets/jewelry/earrings-category.jpg"
+        image: "assets/homepage/earrings_category.jpg"
       },
       {
         name: "Necklaces",
         description: "Elegant pendants and statement pieces",
-        image: "assets/jewelry/necklaces-category.jpg"
+        image: "assets/homepage/necklaces_category.jpg"
       },
       {
         name: "Bracelets",
         description: "Delicate chains and bangles",
-        image: "assets/jewelry/bracelets-category.jpg"
+        image: "assets/homepage/bracelets_category.jpg"
       },
       {
         name: "Hairpins",
         description: "Beautiful hair accessories and clips",
-        image: "assets/jewelry/hairpins-category.jpg"
+        image: "assets/homepage/hairpins_category.jpg"
       },
       {
         name: "Keychains",
         description: "Charming and functional key accessories",
-        image: "assets/jewelry/keychains-category.jpg"
+        image: "assets/homepage/keychains_category.jpg"
       }
     ];
 
-    // Carousel Images (placeholder images)
+    // Carousel Images
     this.carouselImages = [
-      "https://via.placeholder.com/600x400/E7B1C1/FFFFFF?text=Jewelry+1",
-      "https://via.placeholder.com/600x400/D4AF37/FFFFFF?text=Jewelry+2",
-      "https://via.placeholder.com/600x400/F8F6F0/333333?text=Jewelry+3",
-      "https://via.placeholder.com/600x400/8B4513/FFFFFF?text=Jewelry+4"
+      "assets/homepage/carousel1.jpg",
+      "assets/homepage/carousel2.jpg",
+      "assets/homepage/carousel3.jpg",
+      "assets/homepage/carousel4.jpg"
     ];
 
     // Featured Products (keeping for potential future use)
