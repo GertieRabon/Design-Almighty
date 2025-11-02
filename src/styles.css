@@ -20,6 +20,11 @@ body {
   color: #2c2c2c;
   background-color: #fafafa;
   overflow-x: hidden;
+  transition: padding-top 0.3s ease;
+}
+
+.header-at-top {
+  padding-top: 80px;
 }
 
 /* Typography */

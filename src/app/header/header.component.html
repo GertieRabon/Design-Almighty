@@ -1,4 +1,4 @@
-<header class="custom-header">
+<header class="custom-header" [ngClass]="{'bottom-position': !isScrolled, 'top-position': isScrolled}">
   <div class="header-container">
     <!-- Left Navigation -->
     <nav class="left-nav">

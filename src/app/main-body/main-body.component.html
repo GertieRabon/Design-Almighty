@@ -7,15 +7,24 @@
     </div>
   </section>
 
-  <!-- Featured Categories -->
-  <section class="categories-section">
-    <h2 class="section-title">Our Collections</h2>
-    <div class="categories-grid">
-      <div class="category-card" *ngFor="let category of featuredCategories" routerLink="/product">
-        <div class="category-image" [style.background-image]="'url(' + category.image + ')'"></div>
-        <div class="category-content">
-          <h3>{{category.name}}</h3>
-          <p>{{category.description}}</p>
+  <!-- About Section -->
+  <section class="about-section">
+    <div class="about-content">
+      <h2>About Us</h2>
+      <p>The Design Almighty is a creative brand that expresses art through designs that show profound personality and appreciation for the arts. Established in 2019, the brand began its journey to create designs that will help people express their different moods and interests. The brand also aims to promote the local and artistic works from the Philippines. The Design Almighty offers a variety of novelty items such as pins, mirrors, stickers, and prints. 
+      </p>
+      <div class="about-stats">
+        <div class="stat">
+          <span class="stat-number">6</span>
+          <span class="stat-label">Years in the Making</span>
+        </div>
+        <div class="stat">
+          <span class="stat-number">10,000+</span>
+          <span class="stat-label">Happy Customers</span>
+        </div>
+        <div class="stat">
+          <span class="stat-number">100%</span>
+          <span class="stat-label">Handcrafted</span>
         </div>
       </div>
     </div>
@@ -23,7 +32,7 @@
 
   <!-- Featured Products Carousel -->
   <section class="featured-products">
-    <h2 class="section-title">Featured Pieces</h2>
+    <h2 class="section-title">Newest Products</h2>
     <div class="carousel-container">
       <div class="carousel-wrapper">
         <div class="carousel-slides" [style.transform]="'translateX(' + currentSlide * -100 + '%)'">
@@ -53,23 +62,15 @@
     </div>
   </section>
 
-  <!-- About Section -->
-  <section class="about-section">
-    <div class="about-content">
-      <h2>Master Craftsmanship</h2>
-      <p>For over three decades, Design Almighty has been creating exceptional jewelry pieces that celebrate life's most precious moments. Our master artisans combine traditional techniques with contemporary design to create pieces that are both timeless and modern.</p>
-      <div class="about-stats">
-        <div class="stat">
-          <span class="stat-number">5</span>
-          <span class="stat-label">Years in the Making</span>
-        </div>
-        <div class="stat">
-          <span class="stat-number">10,000+</span>
-          <span class="stat-label">Happy Customers</span>
-        </div>
-        <div class="stat">
-          <span class="stat-number">100%</span>
-          <span class="stat-label">Handcrafted</span>
+  <!-- Featured Categories -->
+  <section class="categories-section">
+    <h2 class="section-title">Featured Categories</h2>
+    <div class="categories-grid">
+      <div class="category-card" *ngFor="let category of featuredCategories" routerLink="/product">
+        <div class="category-image" [style.background-image]="'url(' + category.image + ')'"></div>
+        <div class="category-content">
+          <h3>{{category.name}}</h3>
+          <p>{{category.description}}</p>
         </div>
       </div>
     </div>
