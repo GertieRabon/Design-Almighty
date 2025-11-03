@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Product } from '../model/product';
 import { ProductCategory } from '../model/product-category';
 import { ProductService } from '../service/product.service';
 import { RouterLink } from '@angular/router';
-
+import { CartService } from '../service/cart.service'; 
+import { Router } from '@angular/router'; // Also injecting Router as a common dependency for components
 
 @Component({
   selector: 'app-product-category',
@@ -14,134 +15,39 @@ import { RouterLink } from '@angular/router';
   styleUrls: ['./product-category.component.css']
 })
 
-export class ProductCategoryComponent implements OnInit  {
-      public productsCategory: ProductCategory[]  = [];
- 
-        constructor(private productService: ProductService) {
-      
-/*        this.productsCategory =  
-        [
-          {
-            "categoryName": "Snacks",
-            "products":   
-            [             
-              {
-                "id": 1,
-                "name": "Alaska",
-                "description" : "This is a description of Alaska",
-                "categoryName":  "Snack",
-                "unitOfMeasure": "can",
-                "imageFile": "Alaska",
-                "price": "30.00"
-              },
-              {
-                "id": 2,
-                "name": "Cardbury",
-                "description" : "This is a description of Cardbury",
-                "categoryName":  "Snacks",
-                "unitOfMeasure": "ounce",
-                "imageFile": "cardbury",
-                "price": "10.00"
-              },
-              {
-                "id": 3,
-                "name": "Milo",
-                "description" : "This is a description of Milo",
-                "unitOfMeasure": "can",
-                "categoryName":  "Snacks",
-                "imageFile": "milo",
-                "price": "120.00"
-              }
-            ]
-          },
-          {
-            "categoryName": "Audio",
-            "products":   
-            [             
-              {
-                "id":4,
-                "name": "denonreceiver",
-                "description" : "This is a description of Denon receiver",
-                "unitOfMeasure": "piece",
-                "imageFile": "denonreceiver",
-                "categoryName":  "Audio",
-                "price": "1420.00"
-              },
-              {
-                "id": 5,
-                "name": "Mango",
-                "description" : "This is a description of Mango",
-                "unitOfMeasure": "piece",
-                "imageFile": "mango",
-                "categoryName":  "Audio",
-                "price": "0.00"
-              },
-              {
-                "id": 6,
-                "name": "soundar",
-                "description" : "This is a description of the Sound bar",
-                "unitOfMeasure": "piece",
-                "imageFile": "soundbar",
-                "categoryName":  "Audio",          
-                "price": "30.00"
-              },
-              {
-                "id": 6,
-                "name": "soundar2",
-                "description" : "This is a description of another soundbar",
-                "categoryName":  "AUdio",
-                "imageFile": "soundar2",
-                "unitOfMeasure": "piece",
-                "price": "350.00"
-              }
-            ]
-          },
-          {
-            "categoryName": "Dessert",
-            "products":   
-            [             
-              {
-                "id":4,
-                "name": "banana",
-                "description" : "This is a description of banana",
-                "categoryName":  "Audio",
-                "imageFile": "banana",
-                "unitOfMeasure": "kilo",
-                "price": "20.00"
-              },
-              {
-                "id": 5,
-                "name": "Banana Split",
-                "description" : "This is a description of banana split ice cream",
-                "categoryName":  "Audio",
-                "imageFile": "bananasplit",
-                "unitOfMeasure": "serving",
-                "price": "220.00"
-              },
-              {
-                "id": 6,
-                "name": "Leo Milka",
-                "description" : "This is a description of Leo Milka",
-                "categoryName":  "Audio",
-                "imageFile": "leomilka",
-                "unitOfMeasure": "grams",
-                "price": "620.00"
-              },
-              {
-                "id": 6,
-                "name": "Strawberry",
-                "description" : "This is a description of Strawberry",
-                "categoryName":  "AUdio",
-                "imageFile": "strawberry",
-                "unitOfMeasure": "grams",
-                "price": "10.00"
-              }
-            ]
-          }
-        ]; */
-      }
+export class ProductCategoryComponent implements OnInit  {
+    public productsCategory: ProductCategory[]  = [];
+
+    // Use inject() for dependency injection
+    private productService = inject(ProductService);
+    private cartService = inject(CartService); // Injected CartService
+    private router = inject(Router); // Injected Router
+
+    constructor() {} // Empty constructor is fine when using inject()
+
     ngOnInit(): void {
       console.log("ngOnInit called");
+      // Load product categories and products
       this.productService.getData().subscribe(data => {this.productsCategory = data; });
     }
-  }
+    
+    /**
+     * Adds the selected product to the cart (server if authenticated, localStorage if guest).
+     */
+    addToCart(product: Product, event: Event): void {
+        event.preventDefault(); // Prevents potential link navigation from button click
+        
+        // Call the service method, using default quantity of 1
+        this.cartService.addToCart(product, 1).subscribe({
+            next: () => {
+                // Provide success feedback
+                alert(`${product.name} added to cart!`); 
+                // Optionally navigate to cart or show a toast notification
+            },
+            error: (err) => {
+                console.error('Error adding to cart:', err);
+                alert(`Error adding ${product.name} to cart.`); 
+            }
+        });
+    }
+}

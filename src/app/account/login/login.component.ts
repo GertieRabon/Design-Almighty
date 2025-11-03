@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms'; 
 import { AuthService } from '../../service/auth.service';
+import { CartService, CartItem } from '../../service/cart.service'; // NEW IMPORT
 
 @Component({
   selector: 'app-login',
@@ -40,12 +41,13 @@ import { AuthService } from '../../service/auth.service';
 export class LoginComponent {
   loginData = {
     email: 'test@example.com', // Pre-fill with test data
-    password: 'password123'    // Pre-fill with test data
+    password: 'password123'    // Pre-fill with test data
   };
   
   errorMessage = signal<string | null>(null);
   
   private authService = inject(AuthService);
+  private cartService = inject(CartService); // NEW INJECTION
   private router = inject(Router);
 
   onSubmit(form: any): void {
@@ -54,7 +56,31 @@ export class LoginComponent {
       this.authService.login(this.loginData).subscribe({
         next: (response) => {
           this.authService.setToken(response);
-          this.router.navigate(['/account/profile']);
+          
+          // --- Cart Merge Logic (Step 9 in Guide) ---
+          
+          // Use CartService to retrieve local cart items
+          const guestCartItems: CartItem[] = this.cartService.loadLocalCart(); 
+          
+          if (guestCartItems.length > 0) {
+            // Merge cart on server and update local state upon success
+            this.cartService.mergeGuestCart(guestCartItems).subscribe({
+              next: () => {
+                // Merge successful, localStorage cleared inside CartService
+                this.router.navigate(['/account/profile']);
+              },
+              error: (err) => {
+                // If merge fails (e.g., connectivity issue), log error but continue login
+                console.error('Failed to merge guest cart. Continuing to profile.', err);
+                this.router.navigate(['/account/profile']);
+              }
+            });
+          } else {
+            // No guest cart, just navigate
+            this.router.navigate(['/account/profile']);
+          }
+          // --- End Cart Merge Logic ---
+          
         },
         error: (error) => {
           this.errorMessage.set(error.error || 'Login failed. Please check your credentials.');

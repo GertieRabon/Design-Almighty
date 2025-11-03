@@ -1,147 +1,117 @@
 <div class="cart-page">
-    <!-- Page Header -->
-    <div class="page-header">
-      <div class="container">
-        <h1 class="page-title">Shopping Cart</h1>
-        <p class="page-subtitle">Review your selected items</p>
-      </div>
+  <div class="page-header">
+    <div class="container">
+      <h1 class="page-title">Shopping Cart</h1>
+      <p class="page-subtitle">Review your selected items</p>
     </div>
-  
-    <!-- Cart Content -->
-    <div class="cart-content">
-      <div class="container">
-        <div class="cart-layout">
-          <!-- Cart Items -->
-          <div class="cart-items-section">
-            <div class="cart-header">
-              <h2>Your Items ({{cartItems.length}})</h2>
-              <button class="clear-cart-btn" (click)="clearCart()" *ngIf="cartItems.length > 0">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <polyline points="3,6 5,6 21,6"></polyline>
-                  <path d="m19,6v14a2,2 0 0,1 -2,2H7a2,2 0 0,1 -2,-2V6m3,0V4a2,2 0 0,1 2,-2h4a2,2 0 0,1 2,2v2"></path>
-                </svg>
-                Clear Cart
-              </button>
-            </div>
-  
-            <!-- Empty Cart State -->
-            <div class="empty-cart" *ngIf="cartItems.length === 0">
-              <div class="empty-cart-icon">
-                <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
-                  <circle cx="9" cy="21" r="1"></circle>
-                  <circle cx="20" cy="21" r="1"></circle>
-                  <path d="m1 1 4 4 13 13 4-4-13-13z"></path>
-                </svg>
+  </div>
+
+  <div class="cart-content">
+    <div class="container">
+      <div class="cart-layout">
+        <div class="cart-items-section">
+          <div class="cart-header">
+            <h2>Your Items ({{getTotalItems()}})</h2>
+            <button class="clear-cart-btn" (click)="clearCart()" *ngIf="cartItems.length > 0">
+              Clear Cart
+            </button>
+          </div>
+
+          <div class="empty-cart" *ngIf="cartItems.length === 0">
+            <p>Your cart is empty. <a routerLink="/product">Start shopping now!</a></p>
+          </div>
+
+          <div class="cart-items" *ngIf="cartItems.length > 0">
+            <div class="cart-item" *ngFor="let item of cartItems">
+              <div class="item-image">
+                <img [src]="'/assets/images/' + item.imageFile + '.png'" [alt]="item.name" class="product-image">
               </div>
-              <h3>Your cart is empty</h3>
-              <p>Looks like you haven't added any items to your cart yet.</p>
-              <button class="continue-shopping-btn" routerLink="/product">
-                Continue Shopping
-              </button>
-            </div>
-  
-            <!-- Cart Items List -->
-            <div class="cart-items" *ngIf="cartItems.length > 0">
-              <div class="cart-item" *ngFor="let item of cartItems; let i = index">
-                <div class="item-image">
-                  <img [src]="item.image" [alt]="item.name" class="product-image">
+              
+              <div class="item-details">
+                <h3 class="item-name">{{item.name}}</h3>
+                <p class="item-description">{{item.description}}</p>
+                <div class="item-meta">
+                  <span class="item-category">{{item.categoryName}}</span>
+                  <span class="item-unit">{{item.unitOfMeasure}}</span>
                 </div>
-                
-                <div class="item-details">
-                  <h3 class="item-name">{{item.name}}</h3>
-                  <p class="item-description">{{item.description}}</p>
-                  <div class="item-meta">
-                    <span class="item-category">{{item.category}}</span>
-                    <span class="item-unit">{{item.unit}}</span>
-                  </div>
-                  <div class="item-price">${{item.price}}</div>
-                </div>
-  
-                <div class="item-quantity">
-                  <label class="quantity-label">Quantity:</label>
-                  <div class="quantity-controls">
-                    <button class="quantity-btn" (click)="decreaseQuantity(i)" [disabled]="item.quantity <= 1">
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <line x1="5" y1="12" x2="19" y2="12"></line>
-                      </svg>
-                    </button>
-                    <input type="number" 
-                           class="quantity-input" 
-                           [value]="item.quantity" 
-                           (change)="updateQuantity(i, $event)"
-                           min="1" 
-                           max="99">
-                    <button class="quantity-btn" (click)="increaseQuantity(i)">
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <line x1="12" y1="5" x2="12" y2="19"></line>
-                        <line x1="5" y1="12" x2="19" y2="12"></line>
-                      </svg>
-                    </button>
-                  </div>
-                </div>
-  
-                <div class="item-total">
-                  <div class="total-price">${{(item.price * item.quantity).toFixed(2)}}</div>
-                  <button class="remove-item-btn" (click)="removeItem(i)" title="Remove item">
+                <div class="item-price">${{item.price}}</div>
+              </div>
+
+              <div class="item-quantity">
+                <label class="quantity-label">Quantity:</label>
+                <div class="quantity-controls">
+                  <button class="quantity-btn" (click)="decreaseQuantity(item)" [disabled]="item.quantity <= 1">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                  </button>
+                  <input type="number" 
+                         class="quantity-input" 
+                         [value]="item.quantity" 
+                         (change)="onQuantityChange(item, $event)"
+                         min="1" 
+                         max="99">
+                  <button class="quantity-btn" (click)="increaseQuantity(item)">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <polyline points="3,6 5,6 21,6"></polyline>
-                      <path d="m19,6v14a2,2 0 0,1 -2,2H7a2,2 0 0,1 -2,-2V6m3,0V4a2,2 0 0,1 2,-2h4a2,2 0 0,1 2,2v2"></path>
+                      <line x1="12" y1="5" x2="12" y2="19"></line>
+                      <line x1="5" y1="12" x2="19" y2="12"></line>
                     </svg>
                   </button>
                 </div>
               </div>
+
+              <div class="item-total">
+                <div class="total-price">${{getItemTotal(item).toFixed(2)}}</div>
+                <button class="remove-item-btn" (click)="removeItem(item)" title="Remove item">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="3,6 5,6 21,6"></polyline>
+                    <path d="m19,6v14a2,2 0 0,1 -2,2H7a2,2 0 0,1 -2,-2V6m3,0V4a2,2 0 0,1 2,-2h4a2,2 0 0,1 2,2v2"></path>
+                  </svg>
+                </button>
+              </div>
             </div>
           </div>
-  
-          <!-- Cart Summary -->
-          <div class="cart-summary" *ngIf="cartItems.length > 0">
-            <div class="summary-card">
-              <h3 class="summary-title">Order Summary</h3>
+        </div>
+
+        <div class="cart-summary" *ngIf="cartItems.length > 0">
+          <div class="summary-card">
+            <h3 class="summary-title">Order Summary</h3>
+            
+            <div class="summary-details">
+              <div class="summary-row">
+                <span>Subtotal ({{getTotalItems()}} items)</span>
+                <span>${{getSubtotal().toFixed(2)}}</span>
+              </div>
               
-              <div class="summary-details">
-                <div class="summary-row">
-                  <span>Subtotal ({{getTotalItems()}} items)</span>
-                  <span>${{getSubtotal().toFixed(2)}}</span>
-                </div>
-                
-                <div class="summary-row">
-                  <span>Shipping</span>
-                  <span class="free-shipping">FREE</span>
-                </div>
-                
-                <div class="summary-row">
-                  <span>Tax</span>
-                  <span>${{getTax().toFixed(2)}}</span>
-                </div>
-                
-                <div class="summary-row total-row">
-                  <span>Total</span>
-                  <span>${{getTotal().toFixed(2)}}</span>
-                </div>
+              <div class="summary-row">
+                <span>Shipping</span>
+                <span class="free-shipping">FREE</span>
               </div>
-  
-              <div class="summary-actions">
-                <button class="checkout-btn" (click)="proceedToCheckout()">
-                  Proceed to Checkout
-                </button>
-                
-                <button class="continue-shopping-btn" routerLink="/product">
-                  Continue Shopping
-                </button>
+              
+              <div class="summary-row">
+                <span>Tax ({{taxRate * 100}}%)</span>
+                <span>${{getTax().toFixed(2)}}</span>
               </div>
-  
-              <div class="security-badges">
-                <div class="security-item">
-                  <span>Secure Checkout</span>
-                </div>
-                <div class="security-item">
-                  <span>Money Back Guarantee</span>
-                </div>
+              
+              <div class="summary-row total-row">
+                <span>Total</span>
+                <span>${{getTotal().toFixed(2)}}</span>
               </div>
             </div>
+
+            <div class="summary-actions">
+              <button class="checkout-btn" (click)="proceedToCheckout()">
+                Proceed to Checkout
+              </button>
+              
+              <a class="continue-shopping-btn" routerLink="/product">
+                Continue Shopping
+              </a>
+            </div>
+            
+            <div class="security-badges">
+              </div>
           </div>
         </div>
       </div>
     </div>
   </div>
-  
+</div>

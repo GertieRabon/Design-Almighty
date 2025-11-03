@@ -77,6 +77,6 @@ export class AuthService extends BaseHttpService {
 
   getToken(): string | null {
     // Fetches the raw token from local storage
-    return localStorage.getItem(this.tokenKey);
+    return localStorage.getItem('authToken');
   }
 }
