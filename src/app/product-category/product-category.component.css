@@ -11,26 +11,48 @@
   padding: 0 20px;
 }
 
-/* Page Header */
-.page-header {
-  background: linear-gradient(135deg, #DA65AC 0%, #C270B9 100%);
-  color: white;
-  padding: 60px 0;
-  text-align: center;
+/* Hero Section */
+.hero-section {
+  height: 100vh;
+  background-image: url('/assets/products/productshero.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
 }
 
-.page-title {
+.hero-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+}
+
+.hero-title {
   font-family: 'Hello Valentica';
   font-size: 4rem;
   font-weight: 700;
-  margin-bottom: 15px;
   color: white;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+  z-index: 2;
+  position: relative;
+  opacity: 0;
+  animation: fadeIn 1s ease-in forwards;
 }
 
-.page-subtitle {
-  font-size: 1.2rem;
-  color: white;
-  margin: 0;
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 /* Filters Section */
@@ -339,8 +361,8 @@
 
 /* Responsive Design */
 @media (max-width: 768px) {
-  .page-title {
-    font-size: 2rem;
+  .hero-title {
+    font-size: 3rem;
   }
   
   .filters-row {
@@ -374,13 +396,13 @@
   .container {
     padding: 0 15px;
   }
-  
-  .page-header {
-    padding: 40px 0;
+
+  .hero-section {
+    height: 60vh;
   }
-  
-  .page-title {
-    font-size: 1.8rem;
+
+  .hero-title {
+    font-size: 2.5rem;
   }
   
   .products-row {

@@ -1,10 +1,7 @@
 <div class="products-page">
-  <!-- Page Header -->
-  <div class="page-header">
-    <div class="container">
-      <h1 class="page-title">Our Products</h1>
-      <p class="page-subtitle">Discover our exquisite collection of handcrafted jewelry</p>
-    </div>
+  <!-- Hero Section -->
+  <div class="hero-section">
+    <h1 class="hero-title">Our Products</h1>
   </div>
 
   <!-- Filters and Search -->
@@ -51,7 +48,7 @@
           <div class="products-row">
             <div *ngFor="let product of category.products" class="product-card">
               <div class="product-image">
-                <img [src]="'assets/products/' + product.imageFile + '.jpg'" [alt]="product.name" class="product-img">
+                <img [src]="'/assets/images/' + product.imageFile + '.png'" [alt]="product.name" class="product-img">
                 <div class="product-overlay">
                   <button class="quick-view-btn">Quick View</button>
                   <button class="add-to-cart-btn" routerLink="/cart">
