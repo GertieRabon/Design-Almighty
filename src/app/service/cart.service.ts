@@ -187,4 +187,11 @@ export class CartService extends BaseHttpService {
         unitOfMeasure: dbItem.productUnitOfMeasure
     };
   }
+
+  getCartSnapshot(): CartItem[] {
+    // Assuming cartSubject is the BehaviorSubject internally managing the state
+    // We can safely access its .value property within the service implementation.
+    return this.cartSubject.value; 
+  }
+  
 }

@@ -1,1 +1,60 @@
-<p>product-order works!</p>
+<div class="checkout-page">
+    <div class="page-header">
+        <div class="container">
+            <h1 class="page-title">Final Checkout</h1>
+            <p class="page-subtitle">Review and Confirm Your Order</p>
+        </div>
+    </div>
+
+    <div class="checkout-content">
+        <div class="container checkout-layout">
+
+            <div class="details-section">
+                <h2 class="section-title">1. Review Items</h2>
+                <div class="placeholder-card">
+                    <p>
+                        **Cart Summary:** You have **{{ (cartService.cartItems$ | async)?.length || 0 }}** unique items in your cart.
+                    </p>
+                    <a routerLink="/cart" class="back-to-cart-link">
+                         View/Edit Full Cart
+                    </a>
+                </div>
+                
+                <h2 class="section-title">2. Shipping and Payment (Placeholder)</h2>
+                <div class="placeholder-card">
+                    <p>Shipping Address Selection will go here.</p>
+                    <p>Payment Method Selection will go here.</p>
+                </div>
+            </div>
+
+            <div class="summary-section">
+                <div class="summary-card">
+                    <h3 class="summary-title">Order Confirmation</h3>
+                    
+                    <div class="form-group">
+                        <label for="notes">Special Notes / Requests</label>
+                        <textarea id="notes" name="notes" [(ngModel)]="orderNotes" rows="3"></textarea>
+                    </div>
+
+                    <div class="final-total-placeholder">
+                        <p class="text-center">Total Amount: **View Cart for final value**</p>
+                    </div>
+
+                    <button class="checkout-btn" 
+                            (click)="placeOrder()" 
+                            [disabled]="isProcessing || (cartService.cartItems$ | async)?.length === 0">
+                        @if (isProcessing) {
+                            <span>Processing...</span>
+                        } @else {
+                            <span>Place Order & Pay</span>
+                        }
+                    </button>
+                    
+                    <a routerLink="/cart" class="back-to-cart">
+                        &larr; Back to Cart
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

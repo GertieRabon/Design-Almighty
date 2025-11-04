@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { CartService, CartItem } from '../service/cart.service';
 import { Subscription } from 'rxjs';
-import { AuthService } from '../service/auth.service';
+// Removed: import { AuthService } from '../service/auth.service'; // NO LONGER NEEDED
 
 @Component({
   selector: 'app-shopping-cart',
@@ -19,7 +19,7 @@ export class ShoppingCartComponent implements OnInit, OnDestroy {
   private cartSubscription!: Subscription;
 
   private cartService = inject(CartService);
-  private authService = inject(AuthService);
+  // Removed: private authService = inject(AuthService); 
   private router = inject(Router);
 
   ngOnInit(): void {
@@ -28,7 +28,7 @@ export class ShoppingCartComponent implements OnInit, OnDestroy {
       this.cartItems = items;
     });
 
-    // 2. Trigger initial load of cart items (from local storage or server)
+    // 2. Trigger initial load of cart items (from local storage, as server endpoints are stubs)
     this.cartService.getCartItems().subscribe(); 
   }
 
@@ -71,6 +71,7 @@ export class ShoppingCartComponent implements OnInit, OnDestroy {
   }
 
   private updateQuantity(productId: number, quantity: number): void {
+    // This calls the CartService, which now uses local storage for guests.
     this.cartService.updateCartItem(productId, quantity).subscribe({
       error: (err) => {
         console.error('Update failed:', err);
@@ -80,6 +81,7 @@ export class ShoppingCartComponent implements OnInit, OnDestroy {
   }
 
   removeItem(item: CartItem): void {
+    // This calls the CartService, which now uses local storage for guests.
     this.cartService.removeCartItem(item.productId).subscribe({
       error: (err) => {
         console.error('Remove failed:', err);
@@ -89,6 +91,7 @@ export class ShoppingCartComponent implements OnInit, OnDestroy {
   }
 
   clearCart(): void {
+    // This calls the CartService, which now uses local storage for guests.
     this.cartService.clearCart().subscribe({
       error: (err) => {
         console.error('Clear failed:', err);
@@ -103,7 +106,6 @@ export class ShoppingCartComponent implements OnInit, OnDestroy {
   }
 
   getSubtotal(): number {
-    // Use the new helper method for accurate summation
     return this.cartItems.reduce((total, item) => total + this.getItemTotal(item), 0);
   }
 
@@ -119,16 +121,11 @@ export class ShoppingCartComponent implements OnInit, OnDestroy {
 
   proceedToCheckout(): void {
     if (this.cartItems.length === 0) {
-        return; // Cannot checkout with empty cart
+        alert('Cannot proceed to checkout with an empty cart.');
+        return; 
     }
     
-    if (!this.authService.isLoggedIn()) {
-      alert('Please log in or sign up to proceed to checkout.');
-      this.router.navigate(['/account/login']);
-      return;
-    }
-    
-    // Once logged in, proceed to order/checkout route
+    // CRITICAL CHANGE: Navigate directly to the order/checkout route.
     this.router.navigate(['/order']); 
   }
 }

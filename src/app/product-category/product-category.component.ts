@@ -35,18 +35,21 @@ export class ProductCategoryComponent implements OnInit  {
      * Adds the selected product to the cart (server if authenticated, localStorage if guest).
      */
     addToCart(product: Product, event: Event): void {
-        event.preventDefault(); // Prevents potential link navigation from button click
+        event.preventDefault(); 
         
-        // Call the service method, using default quantity of 1
         this.cartService.addToCart(product, 1).subscribe({
             next: () => {
-                // Provide success feedback
                 alert(`${product.name} added to cart!`); 
-                // Optionally navigate to cart or show a toast notification
             },
             error: (err) => {
                 console.error('Error adding to cart:', err);
-                alert(`Error adding ${product.name} to cart.`); 
+                // Provide better feedback for 403 error
+                if (err.status === 403 || err.status === 401) {
+                    alert('Session expired. Please log in again.');
+                    this.router.navigate(['/account/login']);
+                } else {
+                    alert(`Error adding ${product.name} to cart.`); 
+                }
             }
         });
     }
