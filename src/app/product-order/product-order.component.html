@@ -1,57 +1,124 @@
 <div class="checkout-page">
     <div class="page-header">
         <div class="container">
-            <h1 class="page-title">Final Checkout</h1>
-            <p class="page-subtitle">Review and Confirm Your Order</p>
+            <h1 class="page-title">Checkout</h1>
+            <p class="page-subtitle">Secure Payment & Order Confirmation</p>
         </div>
     </div>
 
     <div class="checkout-content">
         <div class="container checkout-layout">
-
+            
             <div class="details-section">
-                <h2 class="section-title">1. Review Items</h2>
-                <div class="placeholder-card">
-                    <p>
-                        **Cart Summary:** You have **{{ (cartService.cartItems$ | async)?.length || 0 }}** unique items in your cart.
-                    </p>
-                    <a routerLink="/cart" class="back-to-cart-link">
-                         View/Edit Full Cart
-                    </a>
-                </div>
-                
-                <h2 class="section-title">2. Shipping and Payment (Placeholder)</h2>
-                <div class="placeholder-card">
-                    <p>Shipping Address Selection will go here.</p>
-                    <p>Payment Method Selection will go here.</p>
-                </div>
-            </div>
+                <form #checkoutForm="ngForm" (ngSubmit)="placeOrder(checkoutForm)" class="customer-form">
+                    <h2 class="section-title">1. Contact Information</h2>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="firstName">First Name *</label>
+                            <input type="text" id="firstName" name="firstName" [(ngModel)]="customer.firstName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="lastName">Last Name *</label>
+                            <input type="text" id="lastName" name="lastName" [(ngModel)]="customer.lastName" required>
+                        </div>
+                    </div>
 
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="email">Email Address *</label>
+                            <input type="email" id="email" name="email" [(ngModel)]="customer.email" required email>
+                        </div>
+                        <div class="form-group">
+                            <label for="phone">Phone Number</label>
+                            <input type="tel" id="phone" name="phone" [(ngModel)]="customer.phone">
+                        </div>
+                    </div>
+                    
+                    <h2 class="section-title">2. Shipping Address</h2>
+                    
+                    <div class="form-group full-width">
+                        <label for="addressLine1">Street Address / Line 1 *</label>
+                        <input type="text" id="addressLine1" name="addressLine1" [(ngModel)]="customer.addressLine1" required>
+                    </div>
+                    
+                    <div class="form-group full-width">
+                        <label for="addressLine2">Apartment, Suite, etc. (Optional)</label>
+                        <input type="text" id="addressLine2" name="addressLine2" [(ngModel)]="customer.addressLine2">
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="city">City *</label>
+                            <input type="text" id="city" name="city" [(ngModel)]="customer.city" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="province">State / Province</label>
+                            <input type="text" id="province" name="province" [(ngModel)]="customer.province">
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="postalCode">Postal Code *</label>
+                            <input type="text" id="postalCode" name="postalCode" [(ngModel)]="customer.postalCode" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="country">Country *</label>
+                            <input type="text" id="country" name="country" value="Philippines" disabled>
+                        </div>
+                    </div>
+                    
+                    <h2 class="section-title">3. Order Notes</h2>
+                    
+                    <div class="form-group full-width">
+                        <label for="orderNotes">Notes (Optional)</label>
+                        <textarea id="orderNotes" name="orderNotes" [(ngModel)]="orderNotes" rows="3"></textarea>
+                    </div>
+                </form>
+            </div>
+            
             <div class="summary-section">
                 <div class="summary-card">
-                    <h3 class="summary-title">Order Confirmation</h3>
+                    <h3 class="section-title">Order Summary ({{ (cartService.cartItems$ | async)?.length || 0 }} Items)</h3>
                     
-                    <div class="form-group">
-                        <label for="notes">Special Notes / Requests</label>
-                        <textarea id="notes" name="notes" [(ngModel)]="orderNotes" rows="3"></textarea>
+                    <div *ngFor="let item of cartService.cartItems$ | async" class="cart-item-summary">
+                        <span>{{ item.name }} (x{{ item.quantity }})</span>
+                        <span>${{ getItemTotal(item).toFixed(2) }}</span>
                     </div>
 
-                    <div class="final-total-placeholder">
-                        <p class="text-center">Total Amount: **View Cart for final value**</p>
+                    <div class="summary-calculations">
+                        <div class="calc-row">
+                            <span>Subtotal</span>
+                            <span>${{ getSubtotal().toFixed(2) }}</span>
+                        </div>
+                        <div class="calc-row">
+                            <span>Shipping</span>
+                            <span style="color: #28a745; font-weight: 600;">FREE</span>
+                        </div>
+                        <div class="calc-row">
+                            <span>Tax ({{ taxRate * 100 }}%)</span>
+                            <span>${{ getTax().toFixed(2) }}</span>
+                        </div>
+                        <div class="calc-row total-row">
+                            <span>Order Total</span>
+                            <span>${{ getTotal().toFixed(2) }}</span>
+                        </div>
                     </div>
 
-                    <button class="checkout-btn" 
-                            (click)="placeOrder()" 
-                            [disabled]="isProcessing || (cartService.cartItems$ | async)?.length === 0">
+                    <button type="submit" 
+                            form="checkoutForm" 
+                            class="checkout-btn" 
+                            [disabled]="isProcessing || checkoutForm.invalid || (cartService.cartItems$ | async)?.length === 0">
                         @if (isProcessing) {
-                            <span>Processing...</span>
+                            <span>Placing Order...</span>
                         } @else {
-                            <span>Place Order & Pay</span>
+                            <span>Place Order & Pay ${{ getTotal().toFixed(2) }}</span>
                         }
                     </button>
                     
                     <a routerLink="/cart" class="back-to-cart">
-                        &larr; Back to Cart
+                        &larr; Review Cart Details
                     </a>
                 </div>
             </div>

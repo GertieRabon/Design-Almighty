@@ -1,23 +1,13 @@
-// src/app/service/order.service.ts
-import { Injectable } from '@angular/core';
+// src/app/service/order.service.ts (Update the createOrder method)
+
+import { Injectable, inject } from '@angular/core';
 import { BaseHttpService } from './base-http.service';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-// DTO for order creation (backend assumes the JWT provides the user_id)
-interface OrderRequest {
-  // In a real app, this would include selected shipping/billing address IDs, payment method, etc.
-  // For now, we send minimal data, assuming the backend uses the cart and user ID.
-  notes: string;
-}
-
-// DTO for order response
+// Simplified interfaces for the response
 interface OrderResponse {
-    id: number;
     orderNumber: string;
-    totalAmount: number;
-    status: string;
-    createdAt: string;
 }
 
 @Injectable({
@@ -26,25 +16,21 @@ interface OrderResponse {
 export class OrderService extends BaseHttpService{
 
   constructor (protected override http: HttpClient) { 
-    // The base path is '/api/order'
-    super(http, '/api/order') 
+    super(http, '/api/order')
    }
 
    /**
-    * Creates a new order from the authenticated user's cart.
-    * The JWT Interceptor ensures the user ID is sent securely.
+    * FIX TS2345: Now accepts the full payload object (type 'any') to send to the server.
     */
-   createOrder(notes: string = ''): Observable<OrderResponse> {
-        const payload: OrderRequest = { notes };
-        // BaseHttpService's update() method uses POST, which is suitable for creating a new order.
+   createOrder(payload: any): Observable<OrderResponse> { 
+        // The base class's update method uses POST, which is suitable for creating a new order.
         return this.update(payload); 
    }
 
    /**
-    * Fetches the order history for the authenticated user.
+    * Fetches the order history for the user (Disabled in Guest Checkout model).
     */
    getOrderHistory(): Observable<OrderResponse[]> {
-        // GET /api/order - relies on JWT for user ID
         return this.findAll(); 
    }
 }

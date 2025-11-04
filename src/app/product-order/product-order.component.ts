@@ -2,32 +2,54 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule, AsyncPipe } from '@angular/common'; 
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
-// REMOVED: import { AuthService } from '../service/auth.service'; // No longer needed
+import { Router, RouterLink } from '@angular/router'; 
 import { CartService, CartItem } from '../service/cart.service';
 import { OrderService } from '../service/order.service';
+
+// Model for the data collected during checkout (unchanged)
+interface CustomerData {
+    firstName: string;
+    lastName: string;
+    email: string;
+    phone: string;
+    addressLine1: string;
+    addressLine2: string; 
+    city: string;
+    province: string;
+    postalCode: string;
+}
 
 @Component({
   selector: 'app-product-order',
   standalone: true,
-  imports: [CommonModule, FormsModule, AsyncPipe],
+  imports: [CommonModule, FormsModule, AsyncPipe, RouterLink], 
   templateUrl: './product-order.component.html',
-  styleUrls: [] 
+  styleUrls: ['./product-order.component.css'] 
 })
 export class ProductOrderComponent implements OnInit {
   
-  orderNotes: string = '';
-  isProcessing: boolean = false;
-  
-  // Removed: private authService = inject(AuthService); 
   public cartService = inject(CartService); 
   private orderService = inject(OrderService);
   private router = inject(Router);
 
-  ngOnInit(): void {
-    // CRITICAL: All login checks are removed.
+  customer: CustomerData = {
+    firstName: '',
+    lastName: '',
+    email: '',
+    phone: '',
+    addressLine1: '',
+    addressLine2: '',
+    city: '',
+    province: '',
+    postalCode: ''
+  };
+  
+  orderNotes: string = '';
+  isProcessing: boolean = false;
+  
+  taxRate = 0.08;
 
-    // Check cart validity upon entering the page
+  ngOnInit(): void {
     this.cartService.getCartItems().subscribe(items => {
         if (items.length === 0) {
             alert('Your cart is empty. Redirecting to products.');
@@ -36,44 +58,67 @@ export class ProductOrderComponent implements OnInit {
     });
   }
 
-  // Helper method: Assuming getCartSnapshot() was added to CartService
-  // Note: If you don't have this method, you can use the asynchronous call:
-  // this.cartService.cartItems$['value'] 
   private getCartSnapshot(): CartItem[] {
-    return this.cartService.getCartSnapshot();
+    return (this.cartService as any).cartSubject.value; 
+  }
+  
+  getItemTotal(item: CartItem): number {
+    return parseFloat(item.price) * item.quantity;
+  }
+  getSubtotal(): number {
+    return this.getCartSnapshot().reduce((total, item) => total + this.getItemTotal(item), 0);
+  }
+  getTax(): number {
+    return this.getSubtotal() * this.taxRate;
+  }
+  getTotal(): number {
+    return this.getSubtotal() + this.getTax();
   }
 
-  placeOrder(): void {
-    // Use the synchronous snapshot to safely check the cart length
-    const currentCart = this.getCartSnapshot(); 
+  // src/app/product-order/product-order.component.ts (Snippet inside placeOrder)
+
+  placeOrder(checkoutForm: any): void {
+    const currentCart = this.getCartSnapshot();
     
-    if (currentCart.length === 0) { 
-        alert('Cannot place an empty order.');
-        this.router.navigate(['/product']);
+    if (checkoutForm.invalid || currentCart.length === 0) {
+        alert('Please fill in all required fields and ensure your cart is not empty.');
         return;
     }
 
     this.isProcessing = true;
-    
-    // NOTE: The backend now expects the entire customer/order data in the request body.
-    // In a full implementation, you would merge 'this.customer' (from a form) and 'currentCart' here.
-    
-    // For now, we call createOrder with mock data (or just notes) and trust the backend stub.
-    this.orderService.createOrder(this.orderNotes).subscribe({
-      next: (response) => {
+
+    // FIX: Update payload to match the new CheckoutRequest DTO structure
+    const orderPayload = {
+        // Customer object matches the nested CustomerData DTO
+        customer: this.customer, 
+        
+        // Items array sent as a simplified DTO
+        items: currentCart.map(item => ({
+            productId: item.productId,
+            quantity: item.quantity,
+            price: item.price
+        })),
+        orderNotes: this.orderNotes,
+        totalAmount: this.getTotal().toFixed(2)
+    };
+
+    this.orderService.createOrder(orderPayload).subscribe({ // <-- This sends the complex object
+      next: (response: any) => {
         this.isProcessing = false;
         
-        // Clear local storage cart after successful order creation
-        this.cartService.clearCart().subscribe(); 
+        // 1. Show prompt
+        alert(`Order Placed Successfully! Your Order Number is #${response.orderNumber || 'N/A'}`);
         
-        alert(`Order Placed Successfully! Order #${response.orderNumber}`);
-        // Redirect to a final confirmation page (or the home page)
-        this.router.navigate(['/']); 
+        // 2. Clear local storage cart
+        this.cartService.clearCart().subscribe(() => {
+            // 3. Redirect to homepage after cart is cleared
+            this.router.navigate(['/']); 
+        });
       },
       error: (err) => {
         this.isProcessing = false;
         console.error('Order placement failed:', err);
-        alert(`Failed to place order. Please check console for details.`);
+        alert(`Order placement failed! Status: ${err.status}. Check the browser console for details.`);
       }
     });
   }
